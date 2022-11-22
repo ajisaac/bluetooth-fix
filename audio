@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# switch input/output to headset for meetings
-
-# switch output to headphones music, mute input
-
-
 find_bluetooth_card_id(){
 	pactl list cards short | grep blue | awk '{print $1}'
 }
