@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# switch input/output to headset for meetings
+
+# switch output to headphones music, mute input
+
+
+find_bluetooth_card_id(){
+	pactl list cards short | grep blue | awk '{print $1}'
+}
+
+find_bluetooth_sink_id(){
+	pactl list sinks short | grep blue | awk '{print $1}'
+}
+
+find_sink_inputs(){
+	pactl list sink-inputs short | awk '{print $1}'
+}
+
+move_sink_inputs(){
+	sink=$(find_bluetooth_sink_id)
+	IFS=$'\n';
+	for f in $(find_sink_inputs)
+	do
+		pactl move-sink-input $f $sink
+	done
+}
+
+meetings(){
+	pactl set-card-profile $(find_bluetooth_card_id) headset-head-unit
+	move_sink_inputs
+}
+
+music(){
+	pactl set-card-profile $(find_bluetooth_card_id) a2dp-sink
+	move_sink_inputs
+}
+
+#meetings
+music
+
+
